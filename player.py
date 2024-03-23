@@ -6,10 +6,23 @@ import cv2
 class KeyboardPlayerPyGame(Player):
     def __init__(self):
         self.fpv = None
-        self.last_act = Action.IDLE
         self.screen = None
         self.keymap = None
+
+        self.last_act = Action.IDLE
+        self.last_start = 0  
+        self.last_end = 0  
+
+        self.key_log = [] 
+        self.tutorial_mode = 0 
+
+
+        # delete later 
+        self.act_count = 0 
+        
         super(KeyboardPlayerPyGame, self).__init__()
+
+        
 
     def reset(self):
         self.fpv = None
@@ -27,21 +40,112 @@ class KeyboardPlayerPyGame(Player):
             pygame.K_ESCAPE: Action.QUIT
         }
 
+        self.key_map2 = {
+            Action.LEFT:  pygame.K_LEFT, 
+            Action.RIGHT:  pygame.K_RIGHT, 
+            Action.FORWARD: pygame.K_UP, 
+            Action.BACKWARD:  pygame.K_DOWN, 
+            Action.CHECKIN:  pygame.K_SPACE, 
+            Action.QUIT: pygame.K_ESCAPE
+        }
+
     def act(self):
+        print("in function")
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+
+            if event.type == pygame.QUIT: # click on the red window 
                 pygame.quit()
                 self.last_act = Action.QUIT
                 return Action.QUIT
 
-            if event.type == pygame.KEYDOWN:
+            # if self.tutorial_mode: 
+            #     print("tutorial index: ", self.tutorial_idx)
+            #     start, stuff, end  = self.key_log[self.tutorial_idx]
+            #     end_act  = self.act_count + (end - start)
+            #     print("end act: ", end_act)
+            #     print("stuff: ", stuff)
+                
+            #     if self.tutorial_idx < len(self.key_log): 
+            #         if self.act_count != end_act:
+            #             print("stuff in numbers: ", self.key_map2[stuff])   
+            #             # print(self.key_map2[stuff])   
+            #             self.last_act = stuff            
+            #             # self.last_act |= self.key_map2[stuff] # allows for continuous movement 
+
+            #         else: 
+            #             self.tutorial_idx +=1
+            #             print("increasing")
+            #             # print("tutorial mode: ", stuff)
+            #         # event.type = pygame.KEYDOWN
+            #     else: 
+            #         self.tutorial_mode = False 
+            #         event.type = pygame.K_SPACE
+
+        
+            if event.type == pygame.KEYDOWN:   
+                print("keydown")
+                print(event.key)
+
+                
+                if event.key == pygame.K_i: 
+                    print('i key pressed, self.act: ', self.act_count)
+                    self.tutorial_end = pygame.time.get_ticks() 
+                    self.tutorial_mode = True; 
+                    print("log length: ", len(self.key_log))
+                    print("log\n", self.key_log)
+                    # self.tutorial_mode= False  
+                
+                
+                    
                 if event.key in self.keymap:
-                    self.last_act |= self.keymap[event.key]
+                    print("VALID key in keymap")
+                    # print(event.key)
+                    print("act at this moment: ", self.act_count)
+
+
+                    if not self.tutorial_mode: 
+                        self.last_start = self.act_count
+                        print("created self.last_start", self.last_start)
+                        # event_shit = self.las
+                        # # self.key_log.append((timestamp, event.key))
+                        # self.key_log.append((timestamp, self.last_act))
+
+
+                    self.last_act |= self.keymap[event.key] # allows for continuous movement 
+                    # results in (ACTION.RIGHT | ACTION.LEFT) type shit 
+                    print(self.last_act)
+
+                    
+                    # logging it in 
+                    # also logs in the 'esc' so work on that later 
+    
+
                 else:
                     self.show_target_images()
-            if event.type == pygame.KEYUP:
-                if event.key in self.keymap:
-                    self.last_act ^= self.keymap[event.key]
+            
+           
+            if event.type == pygame.KEYUP :
+                print("keyup")
+                print(event.key)
+                print("act AT THIS MOMENT: ", self.act_count)
+
+                # if self.tutorial_mode: 
+                #     # print("HEREEE")
+                #     self.last_act = 0 # remove the effect 
+                #     self.tutorial_mode = False; 
+
+                if event.key in self.keymap: 
+                    print(event.key)
+                    self.last_end = self.act_count  # Get current timestame 
+
+                    self.key_log.append((self.last_start, self.last_act, self.last_end))
+                    self.last_act ^= self.keymap[event.key] # remove the effect 
+
+                    # print(self.last_act)
+
+        # self.last_end +=1 
+        self.act_count += 1
+        print(self.act_count)
         return self.last_act
 
     def show_target_images(self):
@@ -120,4 +224,7 @@ if __name__ == "__main__":
                         format='%(asctime)s - %(levelname)s: %(message)s', datefmt='%d-%b-%y %H:%M:%S')
     import vis_nav_game as vng
     logging.info(f'player.py is using vis_nav_game {vng.core.__version__}')
-    vng.play(the_player=KeyboardPlayerPyGame())
+    
+    the_player=KeyboardPlayerPyGame()
+    vng.play(the_player)
+    print(the_player.key_log)

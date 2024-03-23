@@ -10,81 +10,15 @@ from sklearn.cluster import KMeans
 from sklearn.neighbors import BallTree
 
 
-class Navigation():
-    def __init__(self, player, start, end):
-        self.player_log = player.key_log 
-        self.pl_start = start 
-        self.pl_end = end 
-        
-        self.curr_idx = self.pl_start 
-
-        self.a_start = self.player_log[self.curr_idx][0]
-        self.a_end = self.player_log[self.curr_idx][2]
-        # self.a_keyboard = self.idx_aend - self. idx_astart 
-
-    
-    def change_stats(self): 
-        print("in change_state")
-        self.curr_idx +=1 
-
-        if self.curr_idx < self.pl_end: 
-            self.a_start = self.player_log[self.curr_idx][0]
-            self.a_end = self.player_log[self.curr_idx][2]
-        # self.a_key = self.idx_astart
-
-    def hi(self): 
-        print("in Navigation Class :))) ")
-        print(self.player_log[self.pl_start][0])
-
-
-    def predefined_action(self): 
-        print("in class Navigation, predefined action!")
-        print("curr idx: {}, end idx: {}".format(self.curr_idx, self.pl_end)) 
-        #print("current INDEX: {}, current key_log: {}".format(self.curr_idx, self.curr_idx_keyboard_it))
-       
-        if self.curr_idx < self.pl_end: 
-
-            print("here in here :) ")
-            # else: # self.idx_astart < = self.idx_aend 
-            print("current keyboard_it/a start: {}".format(self.a_start))
-            print("final boss: {}".format(self.a_end))
-            
-            self.a_start +=1 
-            ret_val = self.player_log[self.curr_idx][1]
-            print("in Navigation class, ret value: {}".format(self.player_log[self.curr_idx][1] ))
-
-            if self.a_start > self.a_end: 
-                self.change_stats()
-
-            return ret_val
-            
-        return Action.QUIT
-
-
 # Define a class for a player controlled by keyboard input using pygame
 class KeyboardPlayerPyGame(Player):
     def __init__(self):
-
-        
         # Initialize class variables
         self.fpv = None  # First-person view image
         self.last_act = Action.IDLE  # Last action taken by the player
         self.screen = None  # Pygame screen
         self.keymap = None  # Mapping of keyboard keys to actions
         super(KeyboardPlayerPyGame, self).__init__()
-        self.exploration = True 
-      
-        # 
-        self.act_count = 0 
-        self.last_start = 0 
-        self.last_end = 0 
-        self.tutorial_mode = False 
-        self.key_log = []
-        self.Navigotor = None
-
-
-
-   
         
         # Variables for saving data
         self.count = 0  # Counter for saving images
@@ -100,8 +34,8 @@ class KeyboardPlayerPyGame(Player):
         # Initialize database for storing VLAD descriptors of FPV
         self.database = []
 
-        
-
+        self.exploration = True; 
+    
     def reset(self):
         # Reset the player state
         self.fpv = None
@@ -120,107 +54,42 @@ class KeyboardPlayerPyGame(Player):
             pygame.K_SPACE: Action.CHECKIN,
             pygame.K_ESCAPE: Action.QUIT
         }
-    
 
-    def act_exploration(self): 
+    def act(self):
+        """
+        Handle player actions based on keyboard input
+        """
 
-        if self.exploration == False: 
-            return self.Navigotor.predefined_action()
-
-
-        print("in function act exploration")
+        if self.exploration: 
+            print("exp")
+        else: 
+            print("nav")
         for event in pygame.event.get():
-
-            if event.type == pygame.QUIT: # click on the red window 
+            #  Quit if user closes window or presses escape
+            if event.type == pygame.QUIT:
                 pygame.quit()
                 self.last_act = Action.QUIT
                 return Action.QUIT
-        
-            if event.type == pygame.KEYDOWN:   
-                print("keydown")
-                # print(event.key)
-                
-                if event.key == pygame.K_i: 
-                    print('i key pressed, self.act: ', self.act_count)
-                    # self.tutorial_end = pygame.time.get_ticks() 
-                    self.tutorial_mode = True; 
-                    print("log length: ", len(self.key_log))
-                    print("log\n", self.key_log)
-                    self.tutorial_mode = False; 
-                    # self.tutorial_mode= False  
-                
-                
-                    
-                if event.key in self.keymap:
-                    print("VALID key in keymap")
-                    # print(event.key)
-                    print("act at this moment: ", self.act_count)
+            # Check if a key has been pressed
 
-
-                    if not self.tutorial_mode: 
-                        self.last_start = self.act_count
-                        print("created self.last_start", self.last_start)
-                        # event_shit = self.las
-                        # # self.key_log.append((timestamp, event.key))
-                        # self.key_log.append((timestamp, self.last_act))
-
-                    self.last_act = self.keymap[event.key] # allows for continuous movement 
-                    # self.last_act |= self.keymap[event.key] # allows for continuous movement 
-                    # results in (ACTION.RIGHT | ACTION.LEFT) type shit 
-                    print(self.last_act)
-
-                    
-                    # logging it in 
-                    # also logs in the 'esc' so work on that later 
-    
-
-                else:
-                    self.show_target_images()
             
-           
-            if event.type == pygame.KEYUP :
-                print("keyup")
-                print(event.key)
-                print("act AT THIS MOMENT: ", self.act_count)
-
-                # if self.tutorial_mode: 
-                #     # print("HEREEE")
-                #     self.last_act = 0 # remove the effect 
-                #     self.tutorial_mode = False; 
-
-                if event.key in self.keymap: 
-                    print(event.key)
-                    self.last_end = self.act_count  # Get current timestame 
-                    self.key_log.append((self.last_start, self.last_act, self.last_end))
-                    self.last_act ^= self.keymap[event.key] # remove the effect 
-
-                    # print(self.last_act)
-
-        # self.last_end +=1 
-        self.act_count += 1
-        print(self.act_count)
+            if event.type == pygame.KEYDOWN:
+                # Check if the pressed key is in the keymap
+                if event.key in self.keymap:
+                    # If yes, bitwise OR the current action with the new one
+                    # This allows for multiple actions to be combined into a single action
+                    self.last_act |= self.keymap[event.key]
+                else:
+                    # If a key is pressed that is not mapped to an action, then display target images
+                    self.show_target_images()
+            # Check if a key has been released
+            if event.type == pygame.KEYUP:
+                # Check if the released key is in the keymap
+                if event.key in self.keymap:
+                    # If yes, bitwise XOR the current action with the new one
+                    # This allows for updating the accumulated actions to reflect the current sate of the keyboard inputs accurately
+                    self.last_act ^= self.keymap[event.key]
         return self.last_act
-
-    # def act_navigation(self): 
-    #     pass 
-
-
-    def act(self):
-
-        if self.exploration == True: 
-            print("exppp")
-            return self.act_exploration()
-        else: 
-            # #return act_navigation(self)
-            print("navvv")
-        
-            # hi = self.Navigotor.predefined_action()
-            # print("back on act :)) ")
-            # return self.keymap[pygame.K_SPACE]
-            return self.act_exploration()
-    
-
-
 
     def show_target_images(self):
         """
@@ -383,16 +252,8 @@ class KeyboardPlayerPyGame(Player):
             targets = self.get_target_images()
             index = self.get_neighbor(targets[0])
             self.goal = index
+            self.exploration = False; 
             print(f'Goal ID: {self.goal}')
-
-
-
-            # additional code added by Niriti 
-            self.exploration = False
-            self.Navigotor = Navigation(self, 0, len(self.key_log))
-            print(self.key_log)
-            self.Navigotor.hi()
-
 
     def pre_navigation(self):
         """
@@ -462,10 +323,6 @@ class KeyboardPlayerPyGame(Player):
                 if not os.path.isdir(save_dir_full):
                     os.mkdir(save_dir_full)
                 # Save current FPV
-                    
-
-                # print("image id: {}, act_count: {}".format(self.count, self.act_count))
-                # print(self.act_count)
                 cv2.imwrite(save_path, fpv)
 
                 # Get VLAD embedding for current FPV and add it to the database
@@ -474,7 +331,6 @@ class KeyboardPlayerPyGame(Player):
                 self.count = self.count + 1
             # If in navigation stage
             elif self._state[1] == Phase.NAVIGATION:
-                
                 # TODO: could you do something else, something smarter than simply getting the image closest to the current FPV?
                 
                 # Key the state of the keys

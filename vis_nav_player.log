@@ -1,0 +1,8 @@
+23-Mar-24 04:33:07 - INFO: player.py is using vis_nav_game 1.1.2
+23-Mar-24 04:33:08 - INFO: vis_nav_game.core version=1.1.2
+23-Mar-24 04:33:08 - INFO: Pass checking essential files
+23-Mar-24 04:33:08 - INFO: Verified /Users/niriti/vis_nav_player/data/maze.json
+23-Mar-24 04:33:08 - INFO: The file '/Users/niriti/vis_nav_player/data/maze.json' exists.
+23-Mar-24 04:33:08 - INFO: Start loading the map
+23-Mar-24 04:33:13 - INFO: Finished loading the map: takes 4.836181879043579 s
+23-Mar-24 04:33:15 - INFO: Target Images processing completed.

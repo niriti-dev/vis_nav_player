@@ -11,6 +11,7 @@ dependencies:
     - opencv_python==4.8.0.76
     - cython~=3.0.2
     - pygame~=2.5.1
+    - open3d==0.18.0
     - matplotlib>=3.5.3
     - cryptography==41.0.3
     - gdown~=4.7.1

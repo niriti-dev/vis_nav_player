@@ -1,0 +1,117 @@
+
+def __init__(self): 
+    self.log = []
+    self.tutorial_mode = False; 
+    self.tutorial_idx = 0 
+
+
+    self.reverse_keymap = {
+        Action.LEFT = Action.RIGHT,  
+        ACTION.RIGHT = Action.LEFT,  
+        ACTION.FORWARD = ACTION.BACKWARD, 
+        ACTION.BACKWARD = ACTION.FORWARD
+    }
+
+
+def boop(self): 
+    if self.tutorial_mode: 
+        return self.follow_tutorial()
+
+
+    if event.type == pygame.KEYDOWN: 
+        if event.key == pygame.K_t: 
+
+            if self.tutorial_mode: 
+
+            else: 
+
+            continue # so don't go beyond this point 
+        
+
+        if event.key in self.keymap: 
+            self.last_act |= self.keymap[event.key]
+            self.event_log.append(pygame.time.get_ticks(),self.keymap[event.key])
+
+def follow_tutorial(self):
+    if self.tutorial_index < len(self.event_log): 
+        ation = self.event_log[self.tutorial_index]
+        self.tutorial_index += 1 
+        return action 
+    else: 
+        self.tutorial_mode = False 
+        return Action.IDLE 
+
+
+EXAMPLE: 
+class A:
+    def __init__(self):
+        self.tutorial = [1, 2, 3, 4]
+        self.b = self.B(self, 0, 2)
+
+    class B:
+        def __init__(self, A, start, end):
+            self.A = A
+            self.start = start 
+            self.end = end 
+            
+
+        def hi(self):
+            for i in range(self.start, self.end):
+                print(self.A.tutorial[i])
+
+a = A()
+a.b.hi()  # This will print the elements of the tutorial list of A
+
+
+
+
+
+class Navigation():
+    # kinda like an iterator 
+
+    def __init__(self, player, start, end):
+        self.plyer_log = player.key_log 
+        self.pl_start = start 
+        self.pl_end = end 
+
+        self.curr_idx = None 
+
+        self.idx_astart = None
+        self.idx_aend = None
+        self.curr_idx_keyboard_it = None
+
+    def predefined_action(): 
+        # current index 
+        # see if curr_idx is within range 
+        # see if there is more keyboard iterations left 
+
+        if self.curr_idx == None: 
+            self.change_stats()
+
+        if self.curr_idx < self.pl_end: 
+            if self.curr_idx_keyboard_it != 0: 
+                self.curr_idx_keyboard_it -= 1
+                return self.player_log[1] 
+            else: 
+                # time to update curr_idx 
+                self.change_stats()
+                
+
+    
+
+
+   
+
+        # act is just gonna call me, everything related to navigating I must do 
+        # first time called, sidx  = 0 b/c start at the beginning 
+
+        # keypoint: keep track of which index I am 
+            # - so need to know which index I am currently on 
+            # - this curr idx has to be (self.pl_start and self.pl_end)
+            # - and within this curr_idx, I need to keep track of which keyboard iteration I am in 
+            # - aka I need to keep track of a count 
+
+    
+
+    
+ 
